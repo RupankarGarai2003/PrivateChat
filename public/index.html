@@ -2,20 +2,23 @@
 <html>
 
 <head>
-
-    <title>Temporary Chat</title>
-
+    <title>Private Chat</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Temporary Chat</h1>
+<h1>PRIVATE CHAT</h1>
 
-<button id="createBtn">Create Room</button>
+<input
+id="nameInput"
+placeholder="Enter Your Name">
+
+<button id="createBtn">
+Create Room
+</button>
 
 <p id="roomID"></p>
 
@@ -35,7 +38,7 @@ Join Room
 
 <input
 id="messageInput"
-placeholder="Type message">
+placeholder="Type your message...">
 
 <button id="sendBtn">
 Send
@@ -46,7 +49,6 @@ Send
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-
 <script src="script.js"></script>
 
 </body>
