@@ -1,7 +1,6 @@
 const socket = io();
 
-let currentRoom = "";
-
+const nameInput = document.getElementById("nameInput");
 const createBtn = document.getElementById("createBtn");
 const joinBtn = document.getElementById("joinBtn");
 const roomID = document.getElementById("roomID");
@@ -11,80 +10,105 @@ const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 const messages = document.getElementById("messages");
 
+let currentRoom = "";
+
 createBtn.onclick = () => {
 
-    socket.emit("create-room");
+    const username = nameInput.value.trim();
 
-};
+    if(username===""){
+        alert("Enter your name");
+        return;
+    }
+
+    socket.emit("create-room", username);
+
+}
 
 joinBtn.onclick = () => {
 
-    socket.emit("join-room", joinInput.value.toUpperCase());
+    const username=nameInput.value.trim();
 
-};
+    if(username===""){
+        alert("Enter your name");
+        return;
+    }
 
-socket.on("room-created", (room) => {
+    socket.emit("join-room",{
+        roomID:joinInput.value.toUpperCase(),
+        username
+    });
 
-    currentRoom = room;
+}
 
-    roomID.innerHTML = "Room ID : <b>" + room + "</b>";
+socket.on("room-created",(room)=>{
 
-    chatBox.style.display = "block";
+    currentRoom=room;
+
+    roomID.innerHTML="Room ID : <b>"+room+"</b>";
+
+    chatBox.style.display="block";
 
 });
 
-socket.on("joined-room", (room) => {
+socket.on("joined-room",(room)=>{
 
-    currentRoom = room;
+    currentRoom=room;
 
-    roomID.innerHTML = "Joined Room : <b>" + room + "</b>";
+    roomID.innerHTML="Joined Room : <b>"+room+"</b>";
 
-    chatBox.style.display = "block";
+    chatBox.style.display="block";
 
 });
 
-socket.on("error-message", (msg) => {
+socket.on("error-message",(msg)=>{
 
     alert(msg);
 
 });
 
-sendBtn.onclick = () => {
+sendBtn.onclick=()=>{
 
-    const text = messageInput.value.trim();
+    const text=messageInput.value.trim();
 
-    if (text === "") return;
+    if(text==="") return;
 
-    socket.emit("chat-message", text);
+    socket.emit("chat-message",text);
 
-    messageInput.value = "";
+    messageInput.value="";
 
-};
+}
 
-socket.on("chat-message", (data) => {
+messageInput.addEventListener("keypress",(e)=>{
 
-    const div = document.createElement("div");
-
-    div.className = "message";
-
-    div.innerHTML = "<b>" + data.sender + ":</b> " + data.message;
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
+    if(e.key==="Enter") sendBtn.click();
 
 });
 
-socket.on("system-message", (msg) => {
+socket.on("chat-message",(data)=>{
 
-    const div = document.createElement("div");
+    const div=document.createElement("div");
 
-    div.className = "system";
+    div.className="message";
 
-    div.innerHTML = msg;
+    div.innerHTML="<b>"+data.sender+"</b><br>"+data.message;
 
     messages.appendChild(div);
 
-    messages.scrollTop = messages.scrollHeight;
+    messages.scrollTop=messages.scrollHeight;
+
+});
+
+socket.on("system-message",(msg)=>{
+
+    const div=document.createElement("div");
+
+    div.className="system";
+
+    div.innerHTML=msg;
+
+    messages.appendChild(div);
+
+    messages.scrollTop=messages.scrollHeight;
 
 });
