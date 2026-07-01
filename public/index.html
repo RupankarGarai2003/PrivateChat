@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Temporary Chat</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Temporary Chat</h1>
+
+<button id="createBtn">Create Room</button>
+
+<p id="roomID"></p>
+
+<input
+id="joinInput"
+placeholder="Enter Room ID">
+
+<button id="joinBtn">
+Join Room
+</button>
+
+<hr>
+
+<div id="chatBox" style="display:none;">
+
+<div id="messages"></div>
+
+<input
+id="messageInput"
+placeholder="Type message">
+
+<button id="sendBtn">
+Send
+</button>
+
+</div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
