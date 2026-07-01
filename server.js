@@ -8,102 +8,113 @@ const io = new Server(server);
 
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-});
-
 const rooms = {};
 
-function generateRoomID() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "";
+function generateRoomID(){
 
-    for (let i = 0; i < 6; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    let id="";
+
+    for(let i=0;i<6;i++){
+
+        id+=chars[Math.floor(Math.random()*chars.length)];
+
     }
 
     return id;
+
 }
 
-io.on("connection", (socket) => {
+io.on("connection",(socket)=>{
 
-    console.log("Connected:", socket.id);
+    console.log("Connected:",socket.id);
 
-    socket.on("create-room", () => {
+    socket.on("create-room",(username)=>{
 
-        let roomID;
+        let room;
 
-        do {
-            roomID = generateRoomID();
-        } while (rooms[roomID]);
+        do{
 
-        rooms[roomID] = [];
+            room=generateRoomID();
 
-        socket.join(roomID);
+        }while(rooms[room]);
 
-        rooms[roomID].push(socket.id);
+        rooms[room]={};
 
-        socket.roomID = roomID;
+        socket.join(room);
 
-        socket.emit("room-created", roomID);
+        rooms[room][socket.id]=username;
 
-        console.log("Room Created:", roomID);
+        socket.roomID=room;
+
+        socket.username=username;
+
+        socket.emit("room-created",room);
+
+        io.to(room).emit("system-message",`${username} created the room.`);
 
     });
 
-    socket.on("join-room", (roomID) => {
+    socket.on("join-room",(data)=>{
 
-        if (!rooms[roomID]) {
-            socket.emit("error-message", "Room does not exist.");
+        const room=data.roomID;
+
+        const username=data.username;
+
+        if(!rooms[room]){
+
+            socket.emit("error-message","Room does not exist.");
+
             return;
+
         }
 
-        if (rooms[roomID].length >= 2) {
-            socket.emit("error-message", "Room is full.");
-            return;
-        }
+        socket.join(room);
 
-        socket.join(roomID);
+        rooms[room][socket.id]=username;
 
-        rooms[roomID].push(socket.id);
+        socket.roomID=room;
 
-        socket.roomID = roomID;
+        socket.username=username;
 
-        socket.emit("joined-room", roomID);
+        socket.emit("joined-room",room);
 
-        io.to(roomID).emit("system-message", "A user joined.");
+        io.to(room).emit("system-message",`${username} joined the room.`);
+
     });
 
-    socket.on("chat-message", (message) => {
+    socket.on("chat-message",(message)=>{
 
-        if (!socket.roomID) return;
+        if(!socket.roomID) return;
 
-        io.to(socket.roomID).emit("chat-message", {
-            sender: socket.id.substring(0, 5),
-            message: message
+        io.to(socket.roomID).emit("chat-message",{
+
+            sender:socket.username,
+
+            message
+
         });
 
     });
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect",()=>{
 
-        const roomID = socket.roomID;
+        const room=socket.roomID;
 
-        if (!roomID) return;
+        if(!room) return;
 
-        if (rooms[roomID]) {
+        if(rooms[room]){
 
-            rooms[roomID] = rooms[roomID].filter(id => id !== socket.id);
+            delete rooms[room][socket.id];
 
-            if (rooms[roomID].length === 0) {
+            io.to(room).emit("system-message",`${socket.username} left the room.`);
 
-                delete rooms[roomID];
+            if(Object.keys(rooms[room]).length===0){
 
-                console.log("Room Deleted:", roomID);
+                delete rooms[room];
 
-            } else {
-
-                io.to(roomID).emit("system-message", "User left the room.");
+                console.log("Deleted Room:",room);
 
             }
 
@@ -113,8 +124,10 @@ io.on("connection", (socket) => {
 
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT=process.env.PORT||3000;
 
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+server.listen(PORT,()=>{
+
+    console.log("Server running on port",PORT);
+
 });
