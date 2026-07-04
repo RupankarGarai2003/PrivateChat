@@ -1,157 +1,1436 @@
-/* Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+/* =====================================================
+   PRIVATE CHAT - PREMIUM CYBERPUNK CSS
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Share+Tech+Mono&display=swap');
+
+:root{
+
+    --bg:#040404;
+
+    --panel:rgba(10,10,10,.88);
+
+    --panel2:#111;
+
+    --green:#00ff88;
+
+    --green2:#00ffaa;
+
+    --cyan:#00e5ff;
+
+    --purple:#8b5cf6;
+
+    --white:#ffffff;
+
+    --text:#dcffe9;
+
+    --shadow:
+        0 0 8px rgba(0,255,136,.5),
+        0 0 30px rgba(0,255,136,.25),
+        0 0 60px rgba(0,255,136,.15);
+
+}
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Share Tech Mono', monospace;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-    background:#050505;
-    color:#00ff66;
-    font-family:'Share Tech Mono', monospace;
 
-    margin:0;
+    font-family:'Share Tech Mono',monospace;
+
+    background:var(--bg);
+
+    color:var(--text);
 
     display:flex;
+
     justify-content:center;
 
     align-items:flex-start;
 
     min-height:100vh;
 
-    overflow-y:auto;
+    padding:40px 18px;
 
-    padding:40px 0;
+    overflow-x:hidden;
+
+    position:relative;
+
 }
 
-/* Background Grid */
+/* GRID */
+
 body::before{
+
     content:"";
+
     position:fixed;
-    width:100%;
-    height:100%;
+
+    inset:0;
+
     background:
-        linear-gradient(rgba(0,255,100,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,100,.08) 1px, transparent 1px);
+
+    linear-gradient(rgba(0,255,136,.05) 1px,transparent 1px),
+
+    linear-gradient(90deg,rgba(0,255,136,.05) 1px,transparent 1px);
+
     background-size:40px 40px;
-    z-index:-1;
+
+    animation:gridMove 18s linear infinite;
+
+    z-index:-3;
+
+}
+
+/* GLOW */
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+
+    radial-gradient(circle at 20% 20%,rgba(0,255,136,.15),transparent 40%),
+
+    radial-gradient(circle at 80% 80%,rgba(0,229,255,.12),transparent 35%),
+
+    radial-gradient(circle at center,rgba(0,255,136,.05),transparent 60%);
+
+    animation:bgPulse 5s ease-in-out infinite alternate;
+
+    z-index:-2;
+
+}
+
+@keyframes gridMove{
+
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(40px);
+    }
+
+}
+
+@keyframes bgPulse{
+
+    from{
+        opacity:.4;
+    }
+
+    to{
+        opacity:1;
+    }
+
 }
 
 .container{
-    width:650px;
-    background:#0a0a0a;
-    border:2px solid #00ff66;
-    border-radius:12px;
-    padding:40px;
+
+    width:100%;
+
+    max-width:760px;
+
+    background:rgba(10,10,10,.75);
+
+    backdrop-filter:blur(18px);
+
+    border:2px solid var(--green);
+
+    border-radius:24px;
+
+    padding:34px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+
+}
+
+/* animated border */
+
+.container::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-2px;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,255,136,.18),
+        transparent
+    );
+
+    animation:borderGlow 5s linear infinite;
+
+}
+
+.container::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    top:-120px;
+
+    width:100%;
+
+    height:120px;
+
+    background:linear-gradient(
+        transparent,
+        rgba(255,255,255,.08),
+        transparent
+    );
+
+    animation:scanner 5s linear infinite;
+
+    pointer-events:none;
+
+}
+
+@keyframes borderGlow{
+
+    from{
+        transform:translateX(-100%);
+    }
+
+    to{
+        transform:translateX(100%);
+    }
+
+}
+
+@keyframes scanner{
+
+    from{
+        top:-120px;
+    }
+
+    to{
+        top:120%;
+    }
+
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.hero{
+    text-align:center;
+    margin-bottom:30px;
+    position:relative;
+}
+
+.logo{
+
+    width:75px;
+    height:75px;
+
+    margin:0 auto 20px;
+
+    border:2px solid var(--green);
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:34px;
+
+    background:rgba(0,255,136,.08);
+
     box-shadow:
-        0 0 20px #00ff66,
-        inset 0 0 15px rgba(0,255,100,.2);
+        0 0 10px rgba(0,255,136,.5),
+        inset 0 0 15px rgba(0,255,136,.2);
+
+    animation:floatLogo 3s ease-in-out infinite;
+
+}
+
+@keyframes floatLogo{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
 }
 
 h1{
-    font-size:48px;
-    color:#00ff66;
-    text-align:center;
-    margin-bottom:30px;
-    text-shadow:0 0 15px #00ff66;
-}
 
-button{
-    width:100%;
-    padding:15px;
-    margin-top:15px;
-    background:#000;
-    color:#00ff66;
-    border:2px solid #00ff66;
-    font-size:20px;
-    cursor:pointer;
-    transition:.3s;
+    font-family:'Orbitron',sans-serif;
+
+    font-size:58px;
+
+    font-weight:800;
+
+    letter-spacing:8px;
+
+    color:var(--green);
+
+    margin-bottom:12px;
+
     text-transform:uppercase;
+
+    animation:flicker 3s infinite;
+
 }
 
-button:hover{
-    background:#00ff66;
-    color:#000;
-    box-shadow:0 0 20px #00ff66;
+@keyframes flicker{
+
+0%,18%,22%,25%,53%,57%,100%{
+
+text-shadow:
+
+0 0 5px #00ff88,
+
+0 0 15px #00ff88,
+
+0 0 35px #00ff88,
+
+0 0 70px #00ff88;
+
+}
+
+20%,24%,55%{
+
+text-shadow:none;
+
+}
+
+}
+
+.subtitle{
+
+    font-size:20px;
+
+    color:#c7ffe3;
+
+    opacity:.9;
+
+    letter-spacing:2px;
+
+    margin-bottom:25px;
+
+}
+
+/* =====================================================
+   PRIVACY BOX
+===================================================== */
+
+.privacy-box{
+
+    background:rgba(18,18,18,.92);
+
+    border:1px solid var(--green);
+
+    border-radius:18px;
+
+    padding:22px;
+
+    margin-bottom:28px;
+
+    box-shadow:
+
+        inset 0 0 15px rgba(0,255,136,.08),
+
+        0 0 15px rgba(0,255,136,.12);
+
+    transition:.35s;
+
+}
+
+.privacy-box:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 0 25px rgba(0,255,136,.25),
+
+        inset 0 0 20px rgba(0,255,136,.15);
+
+}
+
+.privacy-box h2{
+
+    color:var(--white);
+
+    font-size:34px;
+
+    margin-bottom:15px;
+
+}
+
+.privacy-box ul{
+
+    list-style:none;
+
+}
+
+.privacy-box li{
+
+    padding:8px 0;
+
+    color:#d8ffe9;
+
+    font-size:18px;
+
+    transition:.25s;
+
+}
+
+.privacy-box li:hover{
+
+    color:var(--green2);
+
+    transform:translateX(8px);
+
+}
+
+/* =====================================================
+   INPUT SECTION
+===================================================== */
+
+.input-section{
+
+    margin-bottom:22px;
+
+}
+
+.input-section label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    color:#ffffff;
+
+    font-size:17px;
+
+    letter-spacing:1px;
+
 }
 
 input{
+
     width:100%;
-    padding:15px;
-    margin-top:15px;
-    background:#000;
-    color:#00ff66;
-    border:2px solid #00ff66;
-    outline:none;
+
+    padding:16px 18px;
+
+    background:#050505;
+
+    border:2px solid var(--green);
+
+    border-radius:14px;
+
+    color:#fff;
+
     font-size:18px;
+
+    outline:none;
+
+    transition:.3s;
+
 }
 
 input::placeholder{
-    color:#008844;
+
+    color:#00aa66;
+
+}
+
+input:hover{
+
+    border-color:#00ffaa;
+
 }
 
 input:focus{
-    box-shadow:0 0 20px #00ff66;
+
+    border-color:var(--cyan);
+
+    transform:scale(1.02);
+
+    box-shadow:
+
+        0 0 12px rgba(0,255,255,.5),
+
+        0 0 30px rgba(0,255,255,.2);
+
 }
 
-hr{
-    margin:30px 0;
-    border:1px solid #00ff66;
+/* Placeholder typing glow */
+
+input:focus::placeholder{
+
+    color:#66ffe0;
+
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.button-group{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+
+    margin:25px 0;
+
+}
+
+button{
+
+    position:relative;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    border:2px solid var(--green);
+
+    background:#050505;
+
+    color:var(--green);
+
+    border-radius:14px;
+
+    padding:16px;
+
+    font-size:18px;
+
+    font-family:'Share Tech Mono',monospace;
+
+    transition:.35s;
+
+}
+
+/* Shine Animation */
+
+button::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-130%;
+
+    width:70%;
+
+    height:100%;
+
+    background:
+
+    linear-gradient(
+
+    90deg,
+
+    transparent,
+
+    rgba(255,255,255,.35),
+
+    transparent);
+
+    transform:skewX(-25deg);
+
+}
+
+button:hover::before{
+
+    animation:shine .8s forwards;
+
+}
+
+@keyframes shine{
+
+    100%{
+
+        left:170%;
+
+    }
+
+}
+
+button:hover{
+
+    background:var(--green);
+
+    color:#000;
+
+    transform:translateY(-4px);
+
+    box-shadow:
+
+    0 0 12px var(--green),
+
+    0 0 35px rgba(0,255,136,.45);
+
+}
+
+button:active{
+
+    transform:scale(.97);
+
+}
+
+/* =====================================================
+   CHAT HEADER
+===================================================== */
+
+.chat-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+}
+
+.room-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+/* =====================================================
+   ONLINE STATUS
+===================================================== */
+
+.status-dot{
+
+    width:12px;
+
+    height:12px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    display:inline-block;
+
+    margin-right:10px;
+
+    box-shadow:
+
+        0 0 10px var(--green),
+
+        0 0 20px var(--green);
+
+    animation:pulseOnline 1.2s infinite;
+
+}
+
+@keyframes pulseOnline{
+
+    0%{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+    50%{
+
+        transform:scale(1.5);
+
+        opacity:.45;
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+#userCount{
+
+    color:#d9ffe9;
+
+    font-size:17px;
+
 }
 
 #roomID{
-    margin-top:20px;
-    font-size:22px;
-    color:#00ff66;
-    text-align:center;
-    text-shadow:0 0 10px #00ff66;
+
+    font-size:26px;
+
+    color:var(--green);
+
+    text-shadow:
+
+        0 0 8px var(--green),
+
+        0 0 18px rgba(0,255,136,.4);
+
 }
+
+#copyRoomBtn{
+
+    width:auto;
+
+    padding:12px 18px;
+
+}
+
+/* =====================================================
+   CHAT WINDOW
+===================================================== */
 
 #messages{
-    height:350px;
+
+    height:400px;
+
     overflow-y:auto;
-    background:#000;
-    border:2px solid #00ff66;
-    padding:15px;
-    margin-bottom:15px;
-    box-shadow:inset 0 0 15px rgba(0,255,100,.2);
+
+    background:#020202;
+
+    border:2px solid var(--green);
+
+    border-radius:18px;
+
+    padding:18px;
+
+    box-shadow:
+
+        inset 0 0 20px rgba(0,255,136,.08);
+
+    margin-bottom:18px;
+
 }
+
+/* =====================================================
+   MESSAGE
+===================================================== */
 
 .message{
-    padding:10px;
-    margin:8px 0;
-    border-left:4px solid #00ff66;
+
     background:#111;
-    color:#00ff66;
-    word-wrap:break-word;
+
+    border-left:4px solid var(--green);
+
+    border-radius:14px;
+
+    padding:14px 16px;
+
+    margin-bottom:15px;
+
+    color:white;
+
+    word-break:break-word;
+
+    animation:messagePop .35s ease;
+
+    transition:.3s;
+
 }
 
+.message:hover{
+
+    transform:translateX(5px);
+
+    box-shadow:
+
+        0 0 12px rgba(0,255,136,.25);
+
+}
+
+.message strong{
+
+    display:block;
+
+    color:#6cffc0;
+
+    margin-bottom:6px;
+
+    font-size:16px;
+
+}
+
+.message small{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#888;
+
+    font-size:12px;
+
+}
+
+@keyframes messagePop{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+        translateY(20px)
+
+        scale(.94);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+        translateY(0)
+
+        scale(1);
+
+    }
+
+}
+
+/* =====================================================
+   SYSTEM MESSAGE
+===================================================== */
+
 .system{
-    color:#00ffcc;
+
     text-align:center;
-    margin:10px 0;
+
+    color:var(--cyan);
+
+    margin:12px 0;
+
+    font-style:italic;
+
+    animation:fadeSystem .3s;
+
+}
+
+@keyframes fadeSystem{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+/* =====================================================
+   MESSAGE INPUT
+===================================================== */
+
+.message-box{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:center;
+
 }
 
 #messageInput{
-    margin-top:10px;
+
+    flex:1;
+
 }
 
-/* Custom Scrollbar */
+#sendBtn{
+
+    width:160px;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+}
+
+/* SEND BUTTON SPECIAL EFFECT */
+
+#sendBtn:hover{
+
+    background:linear-gradient(
+
+        90deg,
+
+        #00ff88,
+
+        #00ffd5);
+
+    color:#000;
+
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer-text{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:20px;
+
+    color:#b9ffd8;
+
+    font-size:15px;
+
+    opacity:.85;
+
+    flex-wrap:wrap;
+
+}
+
+.footer-text span{
+
+    transition:.3s;
+
+}
+
+.footer-text span:hover{
+
+    color:var(--green);
+
+    text-shadow:0 0 10px var(--green);
+
+}
+
+/* =====================================================
+   HORIZONTAL LINE
+===================================================== */
+
+hr{
+
+    border:none;
+
+    border-top:1px solid rgba(0,255,136,.3);
+
+    margin:25px 0;
+
+}
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+a{
+
+    color:var(--cyan);
+
+    text-decoration:none;
+
+    transition:.3s;
+
+}
+
+a:hover{
+
+    color:var(--green);
+
+    text-shadow:0 0 10px var(--green);
+
+}
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
 ::-webkit-scrollbar{
-    width:8px;
+
+    width:10px;
+
+    height:10px;
+
 }
 
 ::-webkit-scrollbar-track{
-    background:#111;
+
+    background:#080808;
+
+    border-radius:20px;
+
 }
 
 ::-webkit-scrollbar-thumb{
-    background:#00ff66;
+
+    background:linear-gradient(
+
+        180deg,
+
+        #00ff88,
+
+        #00d56f
+
+    );
+
+    border-radius:20px;
+
+    box-shadow:
+
+        0 0 10px rgba(0,255,136,.4);
+
 }
 
 ::-webkit-scrollbar-thumb:hover{
-    background:#00ffaa;
+
+    background:linear-gradient(
+
+        180deg,
+
+        #00ffd5,
+
+        #00ff88
+
+    );
+
+}
+
+/* =====================================================
+   SELECTION
+===================================================== */
+
+::selection{
+
+    background:rgba(0,255,136,.35);
+
+    color:white;
+
+}
+
+/* =====================================================
+   SMOOTH TRANSITIONS
+===================================================== */
+
+button,
+input,
+.message,
+.container,
+.privacy-box{
+
+    transition:.35s ease;
+
+}
+
+/* =====================================================
+   FLOATING ANIMATION
+===================================================== */
+
+@keyframes floating{
+
+    0%{
+
+        transform:translateY(0px);
+
+    }
+
+    50%{
+
+        transform:translateY(-6px);
+
+    }
+
+    100%{
+
+        transform:translateY(0px);
+
+    }
+
+}
+
+.hero{
+
+    animation:floating 6s ease-in-out infinite;
+
+}
+
+/* =====================================================
+   GLOW ANIMATION
+===================================================== */
+
+@keyframes glow{
+
+    0%{
+
+        box-shadow:
+
+        0 0 10px rgba(0,255,136,.2);
+
+    }
+
+    50%{
+
+        box-shadow:
+
+        0 0 30px rgba(0,255,136,.45);
+
+    }
+
+    100%{
+
+        box-shadow:
+
+        0 0 10px rgba(0,255,136,.2);
+
+    }
+
+}
+
+.container{
+
+    animation:glow 5s infinite;
+
+}
+
+/* =====================================================
+   INPUT PLACEHOLDER FADE
+===================================================== */
+
+input::placeholder{
+
+    transition:.3s;
+
+}
+
+input:focus::placeholder{
+
+    opacity:.3;
+
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width:900px){
+
+.container{
+
+    padding:28px;
+
+}
+
+h1{
+
+    font-size:46px;
+
+    letter-spacing:5px;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.button-group{
+
+    grid-template-columns:1fr;
+
+}
+
+.chat-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.room-actions{
+
+    width:100%;
+
+    justify-content:space-between;
+
+}
+
+.message-box{
+
+    flex-direction:column;
+
+}
+
+#sendBtn{
+
+    width:100%;
+
+}
+
+#copyRoomBtn{
+
+    width:auto;
+
+}
+
+#messages{
+
+    height:320px;
+
+}
+
+.logo{
+
+    width:65px;
+
+    height:65px;
+
+    font-size:28px;
+
+}
+
+h1{
+
+    font-size:38px;
+
+    letter-spacing:3px;
+
+}
+
+.subtitle{
+
+    font-size:16px;
+
+}
+
+}
+
+@media (max-width:480px){
+
+.container{
+
+    padding:20px;
+
+}
+
+.logo{
+
+    width:55px;
+
+    height:55px;
+
+    font-size:24px;
+
+}
+
+h1{
+
+    font-size:30px;
+
+}
+
+.privacy-box h2{
+
+    font-size:26px;
+
+}
+
+input{
+
+    font-size:16px;
+
+}
+
+button{
+
+    font-size:16px;
+
+}
+
+#roomID{
+
+    font-size:20px;
+
+}
+
+#messages{
+
+    height:280px;
+
+}
+
+.footer-text{
+
+    font-size:13px;
+
+}
+
+}
+
+/* =====================================================
+   EXTRA PREMIUM EFFECTS
+===================================================== */
+
+/* Neon border on hover */
+
+.container:hover{
+
+    border-color:#00ffd5;
+
+    box-shadow:
+
+        0 0 20px rgba(0,255,136,.45),
+
+        0 0 60px rgba(0,255,136,.2);
+
+}
+
+/* Animated message glow */
+
+.message:hover{
+
+    border-left-color:#00ffd5;
+
+}
+
+/* Animated room id */
+
+#roomID{
+
+    animation:roomGlow 2s infinite alternate;
+
+}
+
+@keyframes roomGlow{
+
+    from{
+
+        text-shadow:
+
+        0 0 5px #00ff88;
+
+    }
+
+    to{
+
+        text-shadow:
+
+        0 0 18px #00ffd5,
+
+        0 0 35px #00ff88;
+
+    }
+
+}
+
+/* Button pulse */
+
+button:hover{
+
+    animation:buttonPulse .5s;
+
+}
+
+@keyframes buttonPulse{
+
+0%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.05);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+/* Fade-in page */
+
+body{
+
+    animation:pageFade .7s ease;
+
+}
+
+@keyframes pageFade{
+
+from{
+
+opacity:0;
+
+transform:translateY(15px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
 }

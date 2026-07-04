@@ -1,50 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Private Chat</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Private Chat | Leave No Trace</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>PRIVATE CHAT</h1>
+    <!-- Header -->
 
-<input
-id="nameInput"
-placeholder="Enter Your Name">
+    <header class="hero">
 
-<button id="createBtn">
-Create Room
-</button>
+        <div class="logo">🔒</div>
 
-<p id="roomID"></p>
+        <h1>PRIVATE CHAT</h1>
 
-<input
-id="joinInput"
-placeholder="Enter Room ID">
+        <p class="subtitle">
+            Chat. Leave No Trace.
+        </p>
 
-<button id="joinBtn">
-Join Room
-</button>
+    </header>
 
-<hr>
+    <!-- Privacy Card -->
 
-<div id="chatBox" style="display:none;">
+    <section class="privacy-box">
 
-<div id="messages"></div>
+        <h2>Privacy First</h2>
 
-<input
-id="messageInput"
-placeholder="Type your message...">
+        <ul>
 
-<button id="sendBtn">
-Send
-</button>
+            <li>🗑 Messages disappear forever</li>
 
-</div>
+            <li>🚫 No chat history</li>
+
+            <li>🚫 No database storage</li>
+
+            <li>🔒 Temporary private rooms</li>
+
+            <li>⚡ Destroyed when everyone leaves</li>
+
+        </ul>
+
+    </section>
+
+    <!-- User -->
+
+    <section class="input-section">
+
+        <label>Your Name</label>
+
+        <input
+            id="nameInput"
+            type="text"
+            maxlength="20"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="👤 Enter your name">
+
+    </section>
+
+    <!-- Buttons -->
+
+    <div class="button-group">
+
+        <button id="createBtn">
+            ➕ Create Room
+        </button>
+
+        <button id="joinBtn">
+            🚪 Join Room
+        </button>
+
+    </div>
+
+    <!-- Join -->
+
+    <section class="input-section">
+
+        <label>Room ID</label>
+
+        <input
+            id="joinInput"
+            type="text"
+            maxlength="6"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="# Enter Room ID">
+
+    </section>
+
+    <!-- Chat -->
+
+    <section id="chatBox" style="display:none;">
+
+        <div class="chat-header">
+
+            <div>
+
+                <span class="status-dot"></span>
+
+                <span id="userCount">
+                    0 Users Online
+                </span>
+
+            </div>
+
+            <div class="room-actions">
+
+                <span id="roomID">
+                    Not Connected
+                </span>
+
+                <button id="copyRoomBtn">
+                    📋 Copy
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="messages"></div>
+
+        <div class="message-box">
+
+            <input
+                id="messageInput"
+                maxlength="500"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="💬 Type your message...">
+
+            <button id="sendBtn">
+                ➤
+            </button>
+
+        </div>
+
+        <div class="footer-text">
+
+            <span>🔒 Temporary Session</span>
+
+            <span>•</span>
+
+            <span>No History</span>
+
+            <span>•</span>
+
+            <span>No Tracking</span>
+
+        </div>
+
+    </section>
 
 </div>
 

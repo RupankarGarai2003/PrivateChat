@@ -3,112 +3,271 @@ const socket = io();
 const nameInput = document.getElementById("nameInput");
 const createBtn = document.getElementById("createBtn");
 const joinBtn = document.getElementById("joinBtn");
+
 const roomID = document.getElementById("roomID");
 const joinInput = document.getElementById("joinInput");
+
 const chatBox = document.getElementById("chatBox");
 const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 const messages = document.getElementById("messages");
 
+// Optional (add these in HTML later)
+const userCount = document.getElementById("userCount");
+const copyRoomBtn = document.getElementById("copyRoomBtn");
+
 let currentRoom = "";
+
+// ----------------------------
+// Validation
+// ----------------------------
+
+function validUsername(name) {
+    return /^[A-Za-z0-9_-]{3,20}$/.test(name.trim());
+}
+
+function validRoom(room) {
+    return /^[A-Z0-9]{6}$/.test(room.trim().toUpperCase());
+}
+
+// ----------------------------
+// Helpers
+// ----------------------------
+
+function scrollBottom() {
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function addMessage(sender, text) {
+
+    const div = document.createElement("div");
+    div.className = "message";
+
+    const name = document.createElement("strong");
+    name.textContent = sender;
+
+    const br = document.createElement("br");
+
+    const msg = document.createElement("span");
+    msg.textContent = text;
+
+    div.appendChild(name);
+    div.appendChild(br);
+    div.appendChild(msg);
+
+    messages.appendChild(div);
+
+    scrollBottom();
+
+}
+
+function addSystemMessage(text) {
+
+    const div = document.createElement("div");
+    div.className = "system";
+
+    div.textContent = text;
+
+    messages.appendChild(div);
+
+    scrollBottom();
+
+}
+
+// ----------------------------
+// Create Room
+// ----------------------------
 
 createBtn.onclick = () => {
 
     const username = nameInput.value.trim();
 
-    if(username===""){
-        alert("Enter your name");
+    if (!validUsername(username)) {
+
+        alert("Username must be 3-20 characters.\nOnly letters, numbers, _ and - are allowed.");
+
         return;
+
     }
 
     socket.emit("create-room", username);
 
-}
+};
+
+// ----------------------------
+// Join Room
+// ----------------------------
 
 joinBtn.onclick = () => {
 
-    const username=nameInput.value.trim();
+    const username = nameInput.value.trim();
+    const room = joinInput.value.trim().toUpperCase();
 
-    if(username===""){
-        alert("Enter your name");
+    if (!validUsername(username)) {
+
+        alert("Invalid username.");
+
         return;
+
     }
 
-    socket.emit("join-room",{
-        roomID:joinInput.value.toUpperCase(),
+    if (!validRoom(room)) {
+
+        alert("Room ID must contain exactly 6 letters/numbers.");
+
+        return;
+
+    }
+
+    socket.emit("join-room", {
+
+        roomID: room,
         username
+
     });
+
+};
+
+// ----------------------------
+// Room Created
+// ----------------------------
+
+socket.on("room-created", (room) => {
+
+    currentRoom = room;
+
+    roomID.textContent = "Room ID : " + room;
+
+    chatBox.style.display = "block";
+
+    messageInput.focus();
+
+});
+
+// ----------------------------
+// Joined Room
+// ----------------------------
+
+socket.on("joined-room", (room) => {
+
+    currentRoom = room;
+
+    roomID.textContent = "Joined Room : " + room;
+
+    chatBox.style.display = "block";
+
+    messageInput.focus();
+
+});
+
+// ----------------------------
+// Copy Room
+// ----------------------------
+
+if (copyRoomBtn) {
+
+    copyRoomBtn.onclick = async () => {
+
+        if (!currentRoom) return;
+
+        try {
+
+            await navigator.clipboard.writeText(currentRoom);
+
+            alert("Room ID copied!");
+
+        } catch {
+
+            alert("Unable to copy Room ID.");
+
+        }
+
+    };
 
 }
 
-socket.on("room-created",(room)=>{
+// ----------------------------
+// Errors
+// ----------------------------
 
-    currentRoom=room;
-
-    roomID.innerHTML="Room ID : <b>"+room+"</b>";
-
-    chatBox.style.display="block";
-
-});
-
-socket.on("joined-room",(room)=>{
-
-    currentRoom=room;
-
-    roomID.innerHTML="Joined Room : <b>"+room+"</b>";
-
-    chatBox.style.display="block";
-
-});
-
-socket.on("error-message",(msg)=>{
+socket.on("error-message", (msg) => {
 
     alert(msg);
 
 });
 
-sendBtn.onclick=()=>{
+// ----------------------------
+// Send Message
+// ----------------------------
 
-    const text=messageInput.value.trim();
+sendBtn.onclick = () => {
 
-    if(text==="") return;
+    const text = messageInput.value.trim();
 
-    socket.emit("chat-message",text);
+    if (text.length === 0)
+        return;
 
-    messageInput.value="";
+    if (text.length > 500) {
 
-}
+        alert("Maximum message length is 500 characters.");
 
-messageInput.addEventListener("keypress",(e)=>{
+        return;
 
-    if(e.key==="Enter") sendBtn.click();
+    }
+
+    socket.emit("chat-message", text);
+
+    messageInput.value = "";
+
+    messageInput.focus();
+
+};
+
+// ----------------------------
+// Enter Key
+// ----------------------------
+
+messageInput.addEventListener("keydown", (e) => {
+
+    if (e.key === "Enter") {
+
+        e.preventDefault();
+
+        sendBtn.click();
+
+    }
 
 });
 
-socket.on("chat-message",(data)=>{
+// ----------------------------
+// Incoming Chat
+// ----------------------------
 
-    const div=document.createElement("div");
+socket.on("chat-message", (data) => {
 
-    div.className="message";
-
-    div.innerHTML="<b>"+data.sender+"</b><br>"+data.message;
-
-    messages.appendChild(div);
-
-    messages.scrollTop=messages.scrollHeight;
+    addMessage(data.sender, data.message);
 
 });
 
-socket.on("system-message",(msg)=>{
+// ----------------------------
+// System Messages
+// ----------------------------
 
-    const div=document.createElement("div");
+socket.on("system-message", (msg) => {
 
-    div.className="system";
+    addSystemMessage(msg);
 
-    div.innerHTML=msg;
+});
 
-    messages.appendChild(div);
+// ----------------------------
+// Live User Count
+// ----------------------------
 
-    messages.scrollTop=messages.scrollHeight;
+socket.on("user-count", (count) => {
+
+    if (!userCount)
+        return;
+
+    userCount.textContent = "Users Online : " + count;
 
 });
